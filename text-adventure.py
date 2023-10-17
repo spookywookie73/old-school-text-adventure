@@ -16,3 +16,16 @@ It's health is {health}.".format(name = self.name, health = self.health)
   
 # enemy1 = Monster(random.choice(monster_list), random.randint(10,20))
 # print(enemy1)
+class Adventurer:
+
+  def __init__(self, name, health = 30, inventory = []):
+    self.name = name
+    self.health = health
+    self.inventory = inventory
+
+  def __repr__(self):
+    return "The name of this adventurer is {name}. {name} has bravely accepted the challenge to rid this \
+dungeon of it's evil.".format(name = self.name)
+  
+# hero = Adventurer("Bob")
+# print(hero)
