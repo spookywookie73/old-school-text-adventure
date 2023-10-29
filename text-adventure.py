@@ -7,7 +7,7 @@ commands = ["north", "south", "east", "west", "get sword", "get book", "get brea
 "get potion", "get hammer", "examine sword", "examine book", "examine bread", "examine key", "examine horn",
  "examine potion", "examine hammer", "eat bread", "give bread to old man", "put book in bookcase", "open chest",
   "put horn on stand", "drink potion", "give hammer to dwarf", "get gem", "examine gem", "examine chest",
-  "examine bookcase", "examine stand", "examine dwarf", "examine old man"]
+  "examine bookcase", "examine stand", "examine dwarf", "examine old man", "examine gemstone"]
 
 #creating the classes needed for the game
 class Monster:
@@ -40,6 +40,87 @@ dungeon of it's evil.".format(name = self.name)
       print("You have {hp} health point.".format(hp = self.health))
     game()
 
+  def use_book(self):
+    if current_room == 7 and "book" in self.inventory:
+      print("You put the book back on it's shelf. As soon as you let go of the book the bookcase slides to it's left, \
+revealing a hidden passage to the east.")
+      bookcase.bookcase_full = True
+      self.inventory.remove("book")
+    elif current_room == 7 and "book" not in self.inventory:
+      print("You do not have a book.")
+    else:
+      print("There is no bookcase here.")
+    game()
+
+  def use_bread(self):
+    if current_room == 24 and choice.lower() == "give bread to old man" and "bread" in self.inventory:
+      print("The Old Man smiles, thanks you for your generosity and gives you a gemstone.")
+      old_man.has_eaten = True
+      self.inventory.remove("bread")
+      self.gems += 1
+      self.inventory.append("gemstone")
+      gems()
+    elif current_room == 24 and choice.lower() == "give bread to old man" and "bread" not in self.inventory:
+      print("You are not carrying any bread")
+    elif choice.lower() == "eat bread" and "bread" in self.inventory:
+      print("You eat the bread, and it was delicious.")
+      self.inventory.remove("bread")
+    elif choice.lower() == "eat bread" and "bread" not in self.inventory:
+      print("You don't have any bread to eat.")
+    else:
+      print("There is no old man here.")
+    game()
+
+  def use_potion(self):
+    if self.gems == 3 and "potion" in self.inventory:
+      print("You drink the potion and feel restored.")
+      self.health = 45
+      self.inventory.remove("potion")
+    elif self.gems < 3 and "potion" in self.inventory:
+      print("You drink the potion and it restores your health points.")
+      self.health = 30
+      self.inventory.remove("potion")
+    else:
+      print("You don't have any potion.")
+    game()
+
+  def use_horn(self):
+    if current_room == 19 and "horn" in self.inventory:
+      print("You place the horn onto the stand. The stand begins to vibrate and then lowers several inches \
+into the ground. As it lowers, two doorways to the north and east appear.")
+      stand.horn_on_stand = True
+      self.inventory.remove("horn")
+    elif current_room == 19 and "horn" not in self.inventory:
+      print("You are not carrying a horn.")
+    else:
+      print("There is no stand here.")
+    game()
+
+  def use_hammer(self):
+    if current_room == 8 and "hammer" in self.inventory:
+      print("The Dwarf takes the hammer from you. He stares at it for a few seconds, and then with a sudden swing of his arms, \
+he smashes the large pile of rocks to dust leaving a doorway to the west.")
+      self.inventory.remove("hammer")
+      dwarf.has_hammer = True
+    elif current_room == 8 and "hammer" not in self.inventory:
+      print("You do not have a hammer.")
+    else:
+      print("There is no Dwarf here.")
+    game()
+
+  def use_key(self):
+    if current_room == 16 and "key" in self.inventory:
+      print("You take the key from your pocket and open the chest.")
+      self.inventory.remove("key")
+      chest.chest_open = True
+    elif current_room == 16 and chest.chest_open == True:
+      print("The chest is already open.")
+    elif current_room == 16 and chest.chest_open == False and "key" not in self.inventory:
+      print("You do not have a key.")
+    else:
+      print("There is no chest here.")
+    game()
+
 
 # functions for the rooms
 def room_1():
@@ -50,6 +131,7 @@ def room_1():
   else:
     print("You are standing in a small room. There is a sword on the floor and a doorway to the north.")
   game()
+
 
 # functions for the items that can be used
 def sword():
@@ -128,7 +210,7 @@ def hammer():
     print("This is a magnificent hammer. It has dwarven runes engraved down the handle and the head is unblemished.")
   elif choice.lower() == "examine hammer" and "hammer" not in hero.inventory:
     print("You are not carrying a hammer.")
-  elif current_room == 16 and choice.lower() == "get hammer" and chest.chest_open == True and hammer_in_chest == True and "hammer" not in hero.inventory:
+  elif current_room == 16 and choice.lower() == "get hammer" and chest.chest_open == True and hammer.hammer_in_chest == True:
     hero.inventory.append("hammer")
     print("You pick up the hammer and put it in your satchel.")
     hammer_in_chest = False
@@ -154,51 +236,33 @@ def book():
 
 def gems():
   if hero.gems == 3:
-    print("As soon as you receive the 3rd gemstone, you feel your health points increase")
+    print("As soon as you receive the 3rd gemstone, you feel your health points increase.")
     hero.health = 45
   elif choice.lower() == "examine gemstone" and "gemstone" in hero.inventory:
     print("It is a blue gemstone.")
-  #elif choice.lower() == "examine gemstone" and "gemstone" not in hero.inventory:
-  else:
+  elif choice.lower() == "examine gemstone" and "gemstone" not in hero.inventory:
     print("You don't have a gemstone.")
   game()
 
 # functions for interactive objects
 def bookcase():
   bookcase_full = False
-  if current_room == 7 and choice.lower() == "put book in bookcase" and "book" in hero.inventory and bookcase_full == False:
-    print("You put the book back on it's shelf. As soon as you let go of the book the bookcase slides to it's left, \
-revealing a hidden passage to the east.")
-    bookcase_full = True
-    hero.inventory.remove("book")
-  elif current_room == 7 and choice.lower() == "put book in bookcase" and "book" not in hero.inventory:
-    print("You do not have a book.")
-  #elif choice.lower() == "put book in bookcase" and current_room != 7:
-   # print("There is no bookcase here.")
-  elif current_room == 7 and choice.lower() == "examine bookcase" and bookcase_full == False:
+  if current_room == 7 and bookcase_full == False:
     print("A large bookcase stands against the eastern wall. It's shelves are full of books, \
 except for one space on the middle shelf.")
-  elif current_room == 7 and choice.lower() == "examine bookcase" and bookcase_full == True:
-    print("The large bookcase, now full of books, has slid to the side granting access to a secret passage.")
+  elif current_room == 7 and bookcase_full == True:
+    print("The large bookcase, now full of books, has slid to the side granting access to a secret passage to the east.")
   else:
     print("There is no bookcase here.")
   game()
 
 def chest():
   chest_open = False
-  if choice.lower() == "open chest" and current_room == 16 and "key" in hero.inventory:
-    print("You take the key from your pocket and open the chest.")
-    hero.inventory.remove("key")
-    chest_open = True
-  elif current_room == 16 and choice.lower() == "open chest" and chest_open == True:
-    print("The chest is already open.")
-  elif current_room == 16 and choice.lower() == "open chest" and chest_open == False and "key" not in hero.inventory:
-    print("You do not have a key.")
-  elif current_room == 16 and choice.lower() == "examine chest" and chest_open == False:
+  if current_room == 16 and chest_open == False:
     print("It is a large metal chest. It has rust running along it's edges and is currently locked.")
-  elif current_room == 16 and choice.lower() == "examine chest" and hammer.hammer_in_chest == True and chest_open == True:
+  elif current_room == 16 and hammer.hammer_in_chest == True and chest.chest_open == True:
     print("The chest contains a Dwarven hammer.")
-  elif current_room == 16 and choice.lower() == "examine chest" and hammer.hammer_in_chest == False and chest_open == True:
+  elif current_room == 16 and hammer.hammer_in_chest == False and chest.chest_open == True:
     print("The large chest lies open and empty.")
   else:
     print("There is no chest here.")
@@ -216,18 +280,9 @@ def stand():
 
 def old_man():
   has_eaten = False
-  if current_room == 24 and choice.lower() == "give bread to old man" and "bread" in hero.inventory:
-    print("The Old Man smiles, thanks you for your generosity and gives you a gemstone.")
-    has_eaten = True
-    hero.inventory.remove("bread")
-    hero.gems += 1
-    hero.inventory.append("gemstone")
-    gems()
-  elif current_room == 24 and choice.lower() == "give bread to old man" and "bread" not in hero.inventory:
-    print("You are not carrying any bread")
-  elif current_room == 24 and choice.lower() == "examine old man" and has_eaten == False:
+  if current_room == 24 and has_eaten == False:
     print("There is an Old Man sitting against the northern wall. His clothes and hair are dirty and he looks very hungry.")
-  elif current_room == 24 and choice.lower() == "examine old man" and has_eaten == True:
+  elif current_room == 24 and has_eaten == True:
     print("The Old Man looks quite content now.")
   else:
     print("There is no Old Man here.")
@@ -237,13 +292,12 @@ def dwarf():
   has_hammer = False
   if current_room == 8 and has_hammer == False:
     print("There is a Dwarf pacing back and forth muttering something about misplacing an important item.")
-    #game()
   elif current_room == 8 and has_hammer == True:
     print("The Dwarf is sitting cross-legged on the floor cleaning his hammer.")
-    #game()
   else:
     print("There is no Dwarf here.")
   game()
+
 
 # functions for running the game and battles
 def game():
@@ -265,7 +319,7 @@ def game():
     hammer()
   elif choice.lower() == "get book" or choice.lower() == "examine book":
     book()
-  elif choice.lower() == "get gemstone":
+  elif choice.lower() == "examine gemstone":
     gems()
   elif choice.lower() == "inventory":
     print(hero.inventory)
@@ -275,12 +329,32 @@ def game():
    # game()
   elif choice.lower() == "examine bookcase":
     bookcase()
+  elif choice.lower() == "put book in bookcase":
+    hero.use_book
+  elif choice.lower() == "examine chest":
+    chest()
+  elif choice.lower() == "open chest":
+    hero.use_key
+  elif choice.lower() == "examine stand":
+    stand()
+  elif choice.lower() == "put horn on stand":
+    hero.use_horn
+  elif choice.lower() == "examine old man":
+    old_man()
+  elif choice.lower() == "give bread to old man" or choice.lower() == "eat bread":
+    hero.use_bread
+  elif choice.lower() == "examine dwarf":
+    dwarf()
+  elif choice.lower() == "give hammer to dwarf":
+    hero.use_hammer
+  elif choice.lower() == "drink potion":
+    hero.use_potion
   elif choice.lower() == "help":
     print(commands)
     game()
   else:
     print("That won't work.")
-  
+    game()
 
 
 # start of game
