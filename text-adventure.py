@@ -20,6 +20,31 @@ class Monster:
     return "This is a {name}. It is a foul creature that has dwelled in this dungeon for far too long. \
 It's health is {health}.".format(name = self.name, health = self.health)
   
+  def attack(self):
+    attack_damage = random.randint(3, 7)
+    boss_attack_damage = random.randint(6, 12)
+    if hero.health > 0 and current_monster == monster1 or hero.health > 0 and current_monster == monster2:
+      print("You are attacked and take {damage} points of damage.".format(damage = attack_damage))
+      hero.health -= attack_damage
+
+      if hero.health <= 0:
+        print("The {enemy} lunges and inflicts a fatal blow. You crash to the floor, your breathing slows. \
+As the light begins to fade you wonder if you were really ready for a challenge like this.".format(enemy = current_monster.name))
+        print("Unfortunately, this is were your adventure ends. Goodbye.")
+        exit()
+      else:
+        game()
+    elif hero.health > 0 and current_monster == boss:
+      print("You are hit and take {damage} points of damage.".format(damage = boss_attack_damage))
+      hero.health -= boss_attack_damage
+
+      if hero.health <= 0:
+        print("The Dark Elf Priestess casts a spell at you and this time you don't recover. The light slips \
+away and your adventure comes to an end. Goodbye.")
+        exit()
+      else:
+        game()
+
 
 class Adventurer:
 
@@ -28,7 +53,7 @@ class Adventurer:
     self.health = health
     self.gems = gems
     self.inventory = inventory
-
+    
   def __repr__(self):
     return "The name of this adventurer is {name}. {name} has bravely accepted the challenge to rid this \
 dungeon of it's evil.".format(name = self.name)
@@ -121,6 +146,145 @@ he smashes the large pile of rocks to dust leaving a doorway to the west.")
       print("There is no chest here.")
     game()
 
+  def attack(self):
+    global monster_in_room
+    if current_room == 14 or current_room == 23:
+      if monster_in_room == True and current_monster.health > 0:
+        attack_points = random.randint(8, 18)
+        print("You hit the {enemy} with your sword inflicting {damage} points \
+of damage.".format(enemy = current_monster.name, damage = attack_points))
+        current_monster.health -= attack_points
+
+        if current_monster.health <= 0:
+          print("You have defeated the {enemy}. You search the area and pickup \
+a gemstone.".format(enemy = current_monster.name))
+          monster_in_room = False
+          self.gems += 1
+          self.inventory.append("gemstone")
+          gems()
+        else:
+          current_monster.attack()
+      else:
+        print("There is nothing to attack.")
+    elif current_room == 25:
+      attack_points = random.randint(8, 18)
+      print("You slice at the {boss} inflicting {damage} points of \
+damage.".format(boss = current_monster.name, damage = attack_points))
+      current_monster.health -= attack_points
+
+      if current_monster.health <= 0:
+        print("With a lunging blow, you defeat the Dark Elf Priestess. The darkness that enveloped the \
+dungeon has lifted. The Wizard appears in front of you. He hands you a bag of gold coins and thanks you for \
+everything you have done. Before you have a chance to respond, he snaps his fingers and you find yourself back in your home.")
+        print("Thankyou for playing my little adventure.")
+        exit()
+      else:
+        current_monster.attack()
+    game()
+
+  def movement(self):
+    if current_room == 1 and choice.lower() == "north":
+      room_2()
+    elif current_room == 2 and choice.lower() == "north":
+      room_4()
+    elif current_room == 2 and choice.lower() == "south":
+      room_1()
+    elif current_room == 2 and choice.lower() == "east":
+      room_5()
+    elif current_room == 2 and choice.lower() == "west":
+      room_3()
+    elif current_room == 3 and choice.lower() == "east":
+      room_2()
+    elif current_room == 3 and choice.lower() == "west":
+      room_8()
+    elif current_room == 3 and choice.lower() == "south":
+      room_6()
+    elif current_room == 4 and choice.lower() == "south":
+      room_2()
+    elif current_room == 4 and choice.lower() == "east":
+      room_19
+    elif current_room == 5 and choice.lower() == "west":
+      room_2()
+    elif current_room == 5 and choice.lower() == "south":
+      room_7()
+    elif current_room == 6 and choice.lower() == "north":
+      room_3()
+    elif current_room == 6 and choice.lower() == "south":
+      room_11()
+    elif current_room == 7 and choice.lower() == "north":
+      room_5()
+    elif current_room == 7 and choice.lower() == "south":
+      room_9()
+    elif current_room == 7 and choice.lower() == "east" and room_7.hidden_passage == True:
+      room_10()
+    elif current_room == 8 and choice.lower() == "west" and room_8.hidden_passage == True:
+      room_22()
+    elif current_room == 8 and choice.lower() == "east":
+      room_3()
+    elif current_room == 9 and choice.lower() == "north":
+      room_7()
+    elif current_room == 9 and choice.lower() == "south":
+      room_13()
+    elif current_room == 10 and choice.lower() == "east":
+      room_14()
+    elif current_room == 10 and choice.lower() == "west":
+      room_7()
+    elif current_room == 11 and choice.lower() == "north":
+      room_6()
+    elif current_room == 11 and choice.lower() == "south":
+      room_12()
+    elif current_room == 12 and choice.lower() == "west":
+      room_16()
+    elif current_room == 12 and choice.lower() == "south":
+      room_15()
+    elif current_room == 13 and choice.lower() == "west":
+      room_17()
+    elif current_room == 13 and choice.lower() == "north":
+      room_9()
+    elif current_room == 14 and choice.lower() == "west" and monster_in_room == False:
+      room_10()
+    elif current_room == 15 and choice.lower() == "north":
+      room_12()
+    elif current_room == 15 and choice.lower() == "east":
+      room_18()
+    elif current_room == 16 and choice.lower() == "east":
+      room_12()
+    elif current_room == 17 and choice.lower() == "south":
+      room_18()
+    elif current_room == 17 and choice.lower() == "east":
+      room_13()
+    elif current_room == 18 and choice.lower() == "north":
+      room_17()
+    elif current_room == 18 and choice.lower() == "west":
+      room_15()
+    elif current_room == 19 and choice.lower() == "west":
+      room_4()
+    elif current_room == 19 and choice.lower() == "north" and room_19.hidden_passage == True:
+      room_20()
+    elif current_room == 19 and choice.lower() == "east" and room_19.hidden_passage == True:
+      room_21()
+    elif current_room == 20 and choice.lower() == "north":
+      room_24()
+    elif current_room == 20 and choice.lower() == "south":
+      room_19()
+    elif current_room == 21 and choice.lower() == "west":
+      room_19()
+    elif current_room == 22 and choice.lower() == "north":
+      room_23()
+    elif current_room == 22 and choice.lower() == "east":
+      room_8()
+    elif current_room == 23 and choice.lower() == "south" and monster_in_room == False:
+      room_22()
+    elif current_room == 24 and choice.lower() == "west":
+      room_25()
+    elif current_room == 24 and choice.lower() == "south":
+      room_20()
+    elif current_room == 25 and choice.lower() == "east":
+      room_24()
+    else:
+      print("You can't go that way.")
+    game()
+
 
 # functions for the rooms
 def room_1():
@@ -132,6 +296,12 @@ def room_1():
     print("You are standing in a small room. There is a sword on the floor and a doorway to the north.")
   game()
 
+def room_2():
+  global current_room
+  current_room = 2
+  print("You are standing at a crossroads. You can go north, south, east or west.")
+  game()
+ 
 
 # functions for the items that can be used
 def sword():
@@ -191,13 +361,15 @@ def key():
   game()
 
 def potion():
+  potion_in_room = True
   if choice.lower() == "examine potion" and "potion" in hero.inventory:
     print("This is a health potion. It fully restores your health points.")
   elif choice.lower() == "examine potion" and "potion" not in hero.inventory:
     print("You are not carrying any potion.")
-  elif current_room == 15 and choice.lower() == "get potion" and "potion" not in hero.inventory:
+  elif current_room == 15 and choice.lower() == "get potion" and potion_in_room == True:
     hero.inventory.append("potion")
     print("You pick up the potion and put it in your satchel.")
+    potion_in_room = False
   elif choice.lower() == "get potion" and "potion" in hero.inventory:
     print("The only potion here is attached to your belt.")
   else:
@@ -324,31 +496,32 @@ def game():
   elif choice.lower() == "inventory":
     print(hero.inventory)
     game()
-  #elif choice.lower() == "attack":
-   # print("There is nothing here to attack.")
-   # game()
+  elif choice.lower() == "attack":
+    hero.attack()
   elif choice.lower() == "examine bookcase":
     bookcase()
   elif choice.lower() == "put book in bookcase":
-    hero.use_book
+    hero.use_book()
   elif choice.lower() == "examine chest":
     chest()
   elif choice.lower() == "open chest":
-    hero.use_key
+    hero.use_key()
   elif choice.lower() == "examine stand":
     stand()
   elif choice.lower() == "put horn on stand":
-    hero.use_horn
+    hero.use_horn()
   elif choice.lower() == "examine old man":
     old_man()
   elif choice.lower() == "give bread to old man" or choice.lower() == "eat bread":
-    hero.use_bread
+    hero.use_bread()
   elif choice.lower() == "examine dwarf":
     dwarf()
   elif choice.lower() == "give hammer to dwarf":
-    hero.use_hammer
+    hero.use_hammer()
   elif choice.lower() == "drink potion":
-    hero.use_potion
+    hero.use_potion()
+  elif choice.lower() == "north" or choice.lower() == "south" or choice.lower() == "east" or choice.lower() == "west":
+    hero.movement()
   elif choice.lower() == "help":
     print(commands)
     game()
@@ -371,6 +544,7 @@ monster3 = Monster(random.choice(monster_list), random.randint(10, 20))
 boss = Monster("Dark Elf Priestess", 40)
 
 current_monster = monster1
+monster_in_room = False
 current_room = 0
 choice = ""
 
