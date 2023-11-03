@@ -1,76 +1,72 @@
 # importing the Random module
 import random
-# a list of monster names
+# a list of monster names to be used when creating the monster classes
 monster_list = ["Snivelling Goblin", "Dark Elf", "Cave Troll", "Giant Spider", "Dire Wolf"]
-# a list of the commands you can use
-commands = ["north", "south", "east", "west", "get sword", "get book", "get bread", "get key", "get horn", 
-"get potion", "get hammer", "examine sword", "examine book", "examine bread", "examine key", "examine horn",
- "examine potion", "examine hammer", "eat bread", "give bread to old man", "put book in bookcase", "open chest",
-  "put horn on stand", "drink potion", "give hammer to dwarf", "get gem", "examine gem", "examine chest",
-  "examine bookcase", "examine stand", "examine dwarf", "examine old man", "examine gemstone"]
-
 
 #creating the classes needed for the game
 class Monster:
-
+  # initialize the monster with a name and health
   def __init__(self, name, health):
     self.name = name
     self.health = health
-    
+  # a description of the monster class
   def __repr__(self):
     return "This is a {name}. It is a foul creature that has dwelled in this dungeon for far too long. \
 It's health is {health}.".format(name = self.name, health = self.health)
-  
+  # create a module the monster class uses while attacking
   def attack(self):
-    attack_damage = random.randint(3, 7)
-    boss_attack_damage = random.randint(6, 12)
+    attack_damage = random.randint(3, 7) # chooses a random attack number within a range
+    boss_attack_damage = random.randint(7, 15)
     if hero.health > 0 and current_monster == monster1 or hero.health > 0 and current_monster == monster2:
-      print("You are attacked and take {damage} points of damage.".format(damage = attack_damage))
       hero.health -= attack_damage
-
-      if hero.health <= 0:
+      print("You are attacked by a {enemy} and take {damage} points of damage. Your health is now {health}.\
+".format(damage = attack_damage, enemy = self.name, health = hero.health))
+      
+      if hero.health <= 0: # if your health is zero, you have died and the game will end
         print("The {enemy} lunges forward and inflicts a fatal blow. You crash to the floor, your breathing slows. \
 As the light begins to fade you wonder if you were really ready for a challenge like this.".format(enemy = current_monster.name))
-        print("Unfortunately, this is were your adventure ends. Goodbye.")
+        print("Unfortunately, this is were your adventure ends. Goodbye.\n")
         exit()
       else:
-        game()
+        game() # if you don't die, the game will continue
     elif hero.health > 0 and current_monster == boss:
-      print("You are hit and take {damage} points of damage.".format(damage = boss_attack_damage))
       hero.health -= boss_attack_damage
-
+      print("A spell from the Drow Priestess hits you and inflicts {damage} points of damage. \
+Your health is now {health}.".format(damage = boss_attack_damage, health = hero.health))
+      
       if hero.health <= 0:
         print("The Dark Elf Priestess casts a spell at you and this time you don't recover. The light slips \
-away and your adventure comes to an end. Goodbye.")
+away and your adventure comes to an end. Goodbye.\n")
         exit()
       else:
         game()
 
 
 class Adventurer:
-
-  def __init__(self, name, health = 30, gems = 0, inventory = []):
+  # initialize the adventurer class with a name, health, number of gems and inventory
+  def __init__(self, name, health = 30, gems = 0, inventory = ["sword"]):
     self.name = name
     self.health = health
     self.gems = gems
     self.inventory = inventory
     
-  def __repr__(self):
-    return "The name of this adventurer is {name}. {name} has bravely accepted the challenge to rid this \
+  def __repr__(self): # adventurer's description
+    return "The name of this adventurer is {name}. {name}, with sword in hand, has bravely accepted the challenge to rid this \
 dungeon of it's evil.".format(name = self.name)
   
-  def health_points(self):
+  def health_points(self): #module to show health points
     if self.health > 1:
       print("You have {hp} health points.".format(hp = self.health))
     else:
       print("You have {hp} health point.".format(hp = self.health))
     game()
-
+  # modules to use different items
   def use_book(self):
+    global bookcase_full
     if current_room == 7 and "book" in self.inventory:
       print("You put the book back on it's shelf. As soon as you let go of the book the bookcase slides to it's left, \
 revealing a hidden passage to the east.")
-      bookcase.bookcase_full = True
+      bookcase_full = True
       self.inventory.remove("book")
     elif current_room == 7 and "book" not in self.inventory:
       print("You do not have a book.")
@@ -112,10 +108,11 @@ revealing a hidden passage to the east.")
     game()
 
   def use_horn(self):
+    global horn_on_stand
     if current_room == 19 and "horn" in self.inventory:
       print("You place the horn onto the stand. The stand begins to vibrate and then lowers several inches \
 into the ground. As it lowers, two doorways to the north and east appear.")
-      stand.horn_on_stand = True
+      horn_on_stand = True
       self.inventory.remove("horn")
     elif current_room == 19 and "horn" not in self.inventory:
       print("You are not carrying a horn.")
@@ -124,11 +121,12 @@ into the ground. As it lowers, two doorways to the north and east appear.")
     game()
 
   def use_hammer(self):
+    global has_hammer
     if current_room == 8 and "hammer" in self.inventory:
       print("The Dwarf takes the hammer from you. He stares at it for a few seconds, and then with a sudden swing of his arms, \
-he smashes the large pile of rocks to dust leaving a doorway to the west.")
+he smashes a large pile of rocks to dust leaving a doorway to the west.")
       self.inventory.remove("hammer")
-      dwarf.has_hammer = True
+      has_hammer = True
     elif current_room == 8 and "hammer" not in self.inventory:
       print("You do not have a hammer.")
     else:
@@ -136,10 +134,11 @@ he smashes the large pile of rocks to dust leaving a doorway to the west.")
     game()
 
   def use_key(self):
+    global chest_open
     if current_room == 16 and "key" in self.inventory:
       print("You take the key from your pocket and open the chest.")
       self.inventory.remove("key")
-      chest.chest_open = True
+      chest_open = True
     elif current_room == 16 and chest.chest_open == True:
       print("The chest is already open.")
     elif current_room == 16 and chest.chest_open == False and "key" not in self.inventory:
@@ -148,19 +147,17 @@ he smashes the large pile of rocks to dust leaving a doorway to the west.")
       print("There is no chest here.")
     game()
 
-  def attack(self):
+  def attack(self): # module for attacking different monsters
     global monster1_alive
     global monster2_alive
     attack_points = random.randint(8, 18)
     if current_room == 14 and monster1_alive == True and current_monster.health > 0:
-      #attack_points = random.randint(8, 18)
-      print("You hit the {enemy} with your sword inflicting {damage} points \
-of damage.".format(enemy = current_monster.name, damage = attack_points))
       current_monster.health -= attack_points
-
+      print("You hit the {enemy} with your sword inflicting {damage} points of damage. Its health \
+is now {health}.".format(enemy = current_monster.name, damage = attack_points, health = current_monster.health))
+      
       if current_monster.health <= 0:
-        print("You have defeated the {enemy}. You search the area and pickup \
-a gemstone.".format(enemy = current_monster.name))
+        print("You have defeated the {enemy}. You search the area and pickup a gemstone.".format(enemy = current_monster.name))
         monster1_alive = False
         self.gems += 1
         self.inventory.append("gemstone")
@@ -169,14 +166,12 @@ a gemstone.".format(enemy = current_monster.name))
         current_monster.attack()
 
     elif current_room == 23 and monster2_alive == True and current_monster.health > 0:
-      #attack_points = random.randint(8, 18)
-      print("You hit the {enemy} with your sword inflicting {damage} points \
-of damage.".format(enemy = current_monster.name, damage = attack_points))
       current_monster.health -= attack_points
-
+      print("You hit the {enemy} with your sword inflicting {damage} points of damage. Its health \
+is now {health}.".format(enemy = current_monster.name, damage = attack_points, health = current_monster.health))
+      
       if current_monster.health <= 0:
-        print("You have defeated the {enemy}. You search the area and pickup \
-a gemstone.".format(enemy = current_monster.name))
+        print("You have defeated the {enemy}. You search the area and pickup a gemstone.".format(enemy = current_monster.name))
         monster2_alive = False
         self.gems += 1
         self.inventory.append("gemstone")
@@ -185,16 +180,15 @@ a gemstone.".format(enemy = current_monster.name))
         current_monster.attack()
 
     elif current_room == 25:
-      #attack_points = random.randint(8, 18)
-      print("You slice at the {boss} inflicting {damage} points of \
-damage.".format(boss = current_monster.name, damage = attack_points))
       current_monster.health -= attack_points
-
-      if current_monster.health <= 0:
+      print("You slice at the {boss} inflicting {damage} points of damage. Her health is now \
+{health}.".format(boss = current_monster.name, damage = attack_points, health = current_monster.health))
+      
+      if current_monster.health <= 0: # if the boss is defeated, you win and the game ends
         print("With a lunging blow, you defeat the Dark Elf Priestess. The darkness that enveloped the \
 dungeon has lifted. The Wizard appears in front of you. He hands you a bag of gold coins and thanks you for \
-everything you have done. Before you have a chance to respond, he snaps his fingers and you find yourself back in your home.")
-        print("Thankyou for playing my little adventure.")
+everything you have done. Before you have a chance to respond, he snaps his fingers and you find yourself back in your home.\n")
+        print("Thankyou for playing my little adventure.\n")
         exit()
       else:
         current_monster.attack()
@@ -202,7 +196,7 @@ everything you have done. Before you have a chance to respond, he snaps his fing
       print("There is nothing to attack.")
     game()
 
-  def movement(self):
+  def movement(self): # module for moving from room to room
     if current_room == 1 and choice.lower() == "north":
       room_2()
     elif current_room == 2 and choice.lower() == "north":
@@ -222,7 +216,7 @@ everything you have done. Before you have a chance to respond, he snaps his fing
     elif current_room == 4 and choice.lower() == "south":
       room_2()
     elif current_room == 4 and choice.lower() == "east":
-      room_19
+      room_19()
     elif current_room == 5 and choice.lower() == "west":
       room_2()
     elif current_room == 5 and choice.lower() == "south":
@@ -253,6 +247,8 @@ everything you have done. Before you have a chance to respond, he snaps his fing
       room_6()
     elif current_room == 11 and choice.lower() == "south":
       room_12()
+    elif current_room == 12 and choice.lower() == "north":
+      room_11()
     elif current_room == 12 and choice.lower() == "west":
       room_16()
     elif current_room == 12 and choice.lower() == "south":
@@ -299,21 +295,16 @@ everything you have done. Before you have a chance to respond, he snaps his fing
       room_25()
     elif current_room == 24 and choice.lower() == "south":
       room_20()
-    #elif current_room == 25 and choice.lower() == "east":
-     # room_24()
     else:
       print("You can't go that way.")
     game()
 
 
-# functions for the rooms
+# functions for the rooms with descriptions
 def room_1():
   global current_room
   current_room = 1
-  if "sword" in hero.inventory:
-    print("You are standing in a small room. There is a doorway to the north.")
-  else:
-    print("You are standing in a small room. There is a sword on the floor and a doorway to the north.")
+  print("You are standing in a small room. There is a doorway to the north.")
   game()
 
 def room_2():
@@ -406,7 +397,7 @@ def room_12():
 def room_13():
   global current_room
   current_room = 13
-  print("You are standing in damp, cold room. You can go north or west.")
+  print("You are standing in a damp, cold room. You can go north or west.")
   game()
 
 def room_14():
@@ -414,7 +405,7 @@ def room_14():
   global current_monster
   current_room = 14
   current_monster = monster1
-  if monster1_alive == True:
+  if monster1_alive == True: # if a monster is in the room it attacks you
     print("You are in a large room. The eastern side of the room is covered in a strange mist.")
     current_monster.attack()
   elif monster1_alive == False:
@@ -513,19 +504,9 @@ last place you will ever see, then casts a spell at you.")
   current_monster.attack()
  
 
-# functions for the items that can be used
+# functions to get the items, with descriptions
 def sword():
-  if choice.lower() == "examine sword" and "sword" in hero.inventory:
-    print("This is a medium sized sword. The handle is in good condition and the blade is surprisingly sharp.")
-  elif choice.lower() == "examine sword" and "sword" not in hero.inventory:
-    print("You are not holding a sword.")
-  elif current_room == 1 and choice.lower() == "get sword" and "sword" not in hero.inventory:
-    hero.inventory.append("sword")
-    print("You pick up the sword.")
-  elif choice.lower() == "get sword" and "sword" in hero.inventory:
-    print("The only sword available is sheathed on your belt.")
-  else:
-    print("There is no sword here.")
+  print("This is a medium sized sword. The handle is in good condition and the blade is surprisingly sharp.")
   game()
 
 def horn():
@@ -662,7 +643,7 @@ def chest():
 def stand():
   global horn_on_stand
   if current_room == 19 and horn_on_stand == False:
-    print("This ornate marble stand has a flat top and an engraving of a man blowing a horn on it's side.")
+    print("The ornate marble stand has a flat top, and down the side, an engraving of a man blowing a horn.")
   elif current_room == 19 and horn_on_stand == True:
     print("The ornate stand is now shorter than it was and now has a horn placed upon it.")
   else:
@@ -693,11 +674,12 @@ def dwarf():
 # functions for running the game and battles
 def game():
   global choice
-  choice = input("What do you want to do? : ")
+  choice = input("\nWhat do you want to do? : ")
   if choice.lower() == "health":
     hero.health_points()
-  elif choice.lower() == "get sword" or choice.lower() == "examine sword":
-    sword()
+  elif choice.lower() == "examine sword":
+    print("This is a medium sized sword. The handle is in good condition and the blade is surprisingly sharp.")
+    game()
   elif choice.lower() == "get horn" or choice.lower() == "examine horn":
     horn()
   elif choice.lower() == "get bread" or choice.lower() == "examine bread":
@@ -713,9 +695,9 @@ def game():
   elif choice.lower() == "examine gemstone":
     gems()
   elif choice.lower() == "inventory":
-    print(hero.inventory)
+    print("You are carrying {items}.".format(items = hero.inventory))
     game()
-  elif choice.lower() == "attack":
+  elif choice.lower() == "attack" or choice.lower() == "attack monster":
     hero.attack()
   elif choice.lower() == "examine bookcase":
     bookcase()
@@ -723,7 +705,7 @@ def game():
     hero.use_book()
   elif choice.lower() == "examine chest":
     chest()
-  elif choice.lower() == "open chest":
+  elif choice.lower() == "open chest" or choice.lower() == "unlock chest":
     hero.use_key()
   elif choice.lower() == "examine stand":
     stand()
@@ -737,33 +719,46 @@ def game():
     dwarf()
   elif choice.lower() == "give hammer to dwarf":
     hero.use_hammer()
-  elif choice.lower() == "drink potion":
+  elif choice.lower() == "drink potion" or choice.lower() == "use potion":
     hero.use_potion()
   elif choice.lower() == "north" or choice.lower() == "south" or choice.lower() == "east" or choice.lower() == "west":
     hero.movement()
-  elif choice.lower() == "help":
-    print(commands)
+  elif current_room == 7 and bookcase_full == False and choice.lower() == "help":
+    print("Maybe you could put something in the bookcase.")
+    game()
+  elif current_room == 8 and has_hammer == False and choice.lower() == "help":
+    print("You could try to find his lost item and give it to him.")
+    game()
+  elif current_room == 19 and horn_on_stand == False and choice.lower() == "help":
+    print("Try to put something on the stand.")
+    game()
+  elif current_room == 24 and has_eaten == False and choice.lower() == "help":
+    print("Give something to him to eat.")
+    game()
+  elif choice.lower() == "hero":
+    print(hero)
     game()
   else:
-    print("That won't work.")
+    print("That can't do that. Try again.")
     game()
 
 
-# start of game
+# start of game with introduction
 print("You are standing in a candle lit room. Behind a table, thumbing through multiple books, \
 stands an old man wearing what appears to be a wizard's robe. He looks at you and start's to talk. \
 'Welcome brave adventurer, I have a quest for you. I need you to clear this dungeon of the evil that dwells there. \
-If you complete this task you will be handsomely rewarded. Good Luck!'")
-heroes_name = input("Please input your name and press enter to begin. : ")
+If you complete this task you will be handsomely rewarded. Good Luck!'\n")
+heroes_name = input("Please input your name and press enter to begin. : ") # store adventurers name
 
-hero = Adventurer(heroes_name)
-monster1 = Monster(random.choice(monster_list), random.randint(10, 20))
-monster2 = Monster(random.choice(monster_list), random.randint(10, 20))
-#monster3 = Monster(random.choice(monster_list), random.randint(10, 20))
-boss = Monster("Dark Elf Priestess", 40)
+hero = Adventurer(heroes_name) # creat the adventurer class
+# create the monster classes with random names and health points
+monster1 = Monster(random.choice(monster_list), random.randint(10, 25))
+monster2 = Monster(random.choice(monster_list), random.randint(10, 25))
+#create the end monster with specific name and health points
+boss = Monster("Dark Elf Priestess", 50)
 
+# variables used in the game
 current_monster = monster1
-#monster_in_room = False
 current_room = 0
 choice = ""
 bread_in_room = True
@@ -780,7 +775,7 @@ has_hammer = False
 monster1_alive = True
 monster2_alive = True
 
-print("The old man whispers something and you are suddenly surrounded by a thick black smoke. \
-After a few moments the smoke clears and you look around.")
-
+print("\nThe old man whispers something and you are suddenly surrounded by a thick black smoke. \
+After a few moments the smoke clears and you look around.\n")
+# start in room 1
 room_1()
