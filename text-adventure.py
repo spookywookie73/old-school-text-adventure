@@ -13,7 +13,7 @@ class Monster:
   def __repr__(self):
     return "This is a {name}. It is a foul creature that has dwelled in this dungeon for far too long. \
 It's health is {health}.".format(name = self.name, health = self.health)
-  # create a module the monster class uses while attacking
+  # create a function the monster class uses while attacking
   def attack(self):
     attack_damage = random.randint(3, 7) # chooses a random attack number within a range
     boss_attack_damage = random.randint(7, 15)
@@ -54,13 +54,13 @@ class Adventurer:
     return "The name of this adventurer is {name}. {name}, with sword in hand, has bravely accepted the challenge to rid this \
 dungeon of it's evil.".format(name = self.name)
   
-  def health_points(self): #module to show health points
+  def health_points(self): # function to show health points
     if self.health > 1:
       print("You have {hp} health points.".format(hp = self.health))
     else:
       print("You have {hp} health point.".format(hp = self.health))
     game()
-  # modules to use different items
+  # functions to use different items
   def use_book(self):
     global bookcase_full
     if current_room == 7 and "book" in self.inventory:
@@ -147,7 +147,7 @@ he smashes a large pile of rocks to dust leaving a doorway to the west.")
       print("There is no chest here.")
     game()
 
-  def attack(self): # module for attacking different monsters
+  def attack(self): # function for attacking different monsters
     global monster1_alive
     global monster2_alive
     attack_points = random.randint(8, 18)
@@ -196,7 +196,7 @@ everything you have done. Before you have a chance to respond, he snaps his fing
       print("There is nothing to attack.")
     game()
 
-  def movement(self): # module for moving from room to room
+  def movement(self): # function for moving from room to room
     if current_room == 1 and choice.lower() == "north":
       room_2()
     elif current_room == 2 and choice.lower() == "north":
