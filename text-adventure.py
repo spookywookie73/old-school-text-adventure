@@ -743,12 +743,41 @@ def game():
     game()
 
 
+def pre_game_choice():
+  global choice
+  choice = input("Do you accept this challenge (Y/N) :")
+  
+  if choice.lower() == "y":
+    print("\nThe old man whispers something and you are suddenly surrounded by a thick black smoke. \
+After a few moments the smoke clears and you look around.\n")
+    room_1()
+  else:
+    print("\nI'm sorry for wasting your time. Goodbye!")
+    exit()
+
+
 # start of game with introduction
-print("You are standing in a candle lit room. Behind a table, thumbing through multiple books, \
+print("\nHello, and welcome to An Old School Text Adventure.\n")
+print("This is a text based interactive adventure. When you start the game you will be given a description \
+of the room you are in and any items that may be present. Your task will be to get to the end and defeat \
+the boss. Hint: There are 3 gemstones to find that will help you on your quest.\n")
+print("The controls include:")
+print("'north', 'south', 'east', 'west' to move from room to room.")
+print("'attack' when you are in a battle.")
+print("'inventory' to see what you are carrying.")
+print("'health' to check your health points.")
+print("'get' + item name. To pick up an item.")
+print("'help' for clues in some rooms.")
+print("'examine' + object. To inspect things.\n")
+print("I hope you have as much fun playing this game as I did playing similar games in my chilhood.")
+
+heroes_name = input("\nPlease input your name and press enter to begin. : ") # store adventurers name
+
+print("\nYou are standing in a candle lit room. Behind a table, thumbing through multiple books, \
 stands an old man wearing what appears to be a wizard's robe. He looks at you and start's to talk. \
-'Welcome brave adventurer, I have a quest for you. I need you to clear this dungeon of the evil that dwells there. \
-If you complete this task you will be handsomely rewarded. Good Luck!'\n")
-heroes_name = input("Please input your name and press enter to begin. : ") # store adventurers name
+'Welcome {hero}, I have a quest for you. I need you to clear a dungeon of the evil that dwells inside. \
+If you complete this task you will be handsomely rewarded.'\n".format(hero = heroes_name))
+
 
 hero = Adventurer(heroes_name) # creat the adventurer class
 # create the monster classes with random names and health points
@@ -775,7 +804,6 @@ has_hammer = False
 monster1_alive = True
 monster2_alive = True
 
-print("\nThe old man whispers something and you are suddenly surrounded by a thick black smoke. \
-After a few moments the smoke clears and you look around.\n")
+
 # start in room 1
-room_1()
+pre_game_choice()
